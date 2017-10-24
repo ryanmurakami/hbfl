@@ -1,0 +1,48 @@
+@import '../../../styles/mixins.less';
+
+.form {
+  max-width: 300px;
+  text-align: center;
+  border: 2px solid @tan;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.error {
+  border: 1px solid #d4401c;
+  background-color: rgba(212, 64, 28, 0.14);
+  border-radius: 3px;
+  padding: 8px;
+  margin-bottom: 16px;
+  color: #d4401c;
+}
+
+.input {
+  margin-bottom: 16px;
+}
+
+.forgotPassword {
+  text-align: right;
+  margin-bottom: 16px;
+
+  a {
+    color: @mauve;
+    font-weight: 500;
+    font-size: .8em;
+  }
+}
+
+.button {
+  padding: 20px;
+  background-color: @tan;
+  margin: 0 -16px -16px;
+  color: @white;
+  font-size: 1.5em;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: fade(@tan, 95%);
+    text-shadow: 0 0 0.2em @white;
+  }
+}

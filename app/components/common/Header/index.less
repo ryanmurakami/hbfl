@@ -1,0 +1,101 @@
+@import '../../../styles/mixins.less';
+
+// mixins
+.colorBlock {
+  width: 40px;
+  height: 100%;
+  display: inline-block;
+}
+
+.block {
+  height: 100%;
+  line-height: @header-height;
+  vertical-align: top;
+}
+
+.link-reset {
+  color: @white;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-shadow: 0 0 0.2em @white;
+  }
+}
+
+// styles
+.header {
+  background-color: @mauve;
+  color: @white;
+  height: @header-height;
+
+  div {
+    display: inline;
+  }
+
+  .colorBlocks {
+
+    .yellow {
+      .colorBlock;
+      background-color: #CFBE27;
+    }
+
+    .orange {
+      .colorBlock;
+      background-color: #F27435;
+    }
+
+    .pink {
+      .colorBlock;
+      background-color: @pink;
+    }
+  }
+
+  .title > a {
+    .block;
+    .link-reset;
+    margin: 0 7%;
+    font-size: 3em;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .menu {
+    div > a {
+      .block;
+      .link-reset;
+      margin: 0 3% 0 0;
+      font-size: 1.5em;
+    }
+  }
+}
+
+// main header override
+:global(.main) .header {
+  .colorBlocks {
+    margin-right: 120px;
+
+    .yellow {
+      width: 30px;
+      height: 80px;
+      transform: rotate(35deg);
+      position: absolute;
+      left: -15px;
+      top: -25px;
+    }
+    .orange {
+      width: 30px;
+      height: 160px;
+      transform: rotate(35deg);
+      position: absolute;
+      top: -35px;
+    }
+    .pink {
+      width: 30px;
+      height: 250px;
+      transform: rotate(35deg);
+      position: absolute;
+      top: -35px;
+    }
+  }
+}

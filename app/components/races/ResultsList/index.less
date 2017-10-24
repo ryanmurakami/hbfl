@@ -1,0 +1,32 @@
+@import '../../../styles/mixins.less';
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+
+  th {
+    padding: 8px;
+  }
+
+  .row {
+    td {
+      padding: 8px;
+      text-align: center;
+      font-weight: 300;
+    }
+
+    a {
+      color: @mauve;
+      font-weight: 500;
+
+      &:hover,
+      &:focus {
+        opacity: .8;
+      }
+    }
+
+    &:nth-child(odd) {
+      background-color: #EAEAEA;
+    }
+  }
+}

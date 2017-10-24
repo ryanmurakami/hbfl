@@ -1,0 +1,7 @@
+{
+  "ignore": [
+    "public/**"
+  ],
+  "verbose": true,
+  "ext": "js json jsx less html"
+}

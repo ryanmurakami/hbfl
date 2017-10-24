@@ -1,0 +1,26 @@
+@import '../../../styles/mixins.less';
+
+.hero {
+  background-color: @mauve;
+  text-align: left;
+  color: @white;
+  padding: 16px 0 36px 400px;
+
+  .mainball {
+    position: absolute;
+    left: 75px;
+    top: @header-height + 20px;
+    > img {
+      width: 250px;
+    }
+  }
+
+  .title {
+    font-size: 2em;
+    font-weight: 900;
+    font-style: italic;
+  }
+  .tagline {
+    margin-top: 10px;
+  }
+}

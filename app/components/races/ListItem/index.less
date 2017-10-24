@@ -1,0 +1,29 @@
+@import '../../../styles/mixins.less';
+
+.linkReset {
+  text-decoration: none;
+}
+
+.item {
+  font-size: 1.5em;
+  font-style: italic;
+  color: @tan;
+  margin-bottom: 8px;
+
+  &:hover,
+  &:focus {
+    text-shadow: 0 0 0.1em @tan;
+  }
+
+  .date {
+    font-weight: 500;
+  }
+
+  .venue {
+    font-weight: 500;
+  }
+
+  .city {
+    font-weight: 300;
+  }
+}

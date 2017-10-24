@@ -1,0 +1,34 @@
+@import '../../../styles/mixins.less';
+
+.info {
+  font-size: 1.5em;
+  font-style: italic;
+  color: #BCBDAC;
+  margin-bottom: 20px;
+  min-height: 175px;
+
+  > div {
+    margin-bottom: 8px;
+
+    .infoTitle {
+      font-weight: 500;
+    }
+  }
+
+  .pic {
+    position: absolute;
+    top: 140px;
+    right: 15%;
+
+    img {
+      width: 250px;
+    }
+  }
+}
+
+.resultsTitle {
+  font-size: 1.25em;
+  font-weight: 500;
+  color: @mauve;
+  margin: 18px 0;
+}

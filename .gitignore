@@ -1,0 +1,14 @@
+# package directories
+node_modules
+jspm_packages
+public/application.min.js
+hbfl.sketch
+public/stylesheet.css
+requirements.txt
+.DS_Store
+**/*.psd
+public/images/*-original.jpg
+public/images/*-original.png
+
+# Serverless directories
+.serverless

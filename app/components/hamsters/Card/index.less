@@ -1,0 +1,40 @@
+@import '../../../styles/mixins.less';
+
+.linkReset {
+  text-decoration: none;
+}
+
+.card {
+  max-width: 175px;
+  text-align: center;
+  border: 2px solid @tan;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0 18px 18px 0;
+
+  &:hover,
+  &:focus {
+    text-shadow: 0 0 0.2em @white;
+  }
+
+  .img {
+    width: 150px;
+  }
+
+  .info {
+    padding: 16px;
+    background-color: @tan;
+    margin: 0 -16px -16px;
+    color: @white;
+    text-align: left;
+
+    .name {
+      font-size: 2em;
+      margin-bottom: 6px;
+    }
+
+    .rank {
+      margin-bottom: 6px;
+    }
+  }
+}
