@@ -4,7 +4,7 @@ This repository contains the demo project for the [AWS Developer: Designing and 
 
 ## Known Issues
 
-None at this time.
+- **Windows Users:** Create a directory called `.ssh` in your home directory (eg. `C:\Users\<your_name>`) before running scripts from Module 2
 
 Found one? Please let me know by opening an [issue](https://github.com/ryanmurakami/hbfl/issues)!
 
