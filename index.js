@@ -10,7 +10,7 @@ const options = {
   // cache: [{
   //   name: 'redis',
   //   engine: require('catbox-redis'),
-  //   host: 'hamster.792iyi.0001.use1.cache.amazonaws.com',
+  //   host: 'TODO: Add your redis cache endpoint',
   //   partition: 'cache'
   // }]
 }
