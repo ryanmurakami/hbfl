@@ -3,16 +3,22 @@ import styles from './index.less'
 import Input from '../../common/Input/index.jsx'
 
 class Form extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      username: '',
-      password: ''
-    }
-
-    this.submit = this.submit.bind(this)
-    this.onKeyPress = this.onKeyPress.bind(this)
+  state = {
+    username: '',
+    password: ''
   }
+
+  onKeyPress = e => {
+    if (e.key === 'Enter') {
+      this.submit()
+    }
+  }
+
+  submit = () => {
+    this.props.submit(this.state.username, this.state.password)
+    this.setState({ username: '', password: '' })
+  }
+
   render () {
     return (
       <div className={styles.form}>
@@ -44,17 +50,6 @@ class Form extends React.Component {
         </div>
       </div>
     )
-  }
-
-  onKeyPress (e) {
-    if (e.key === 'Enter') {
-      this.submit()
-    }
-  }
-
-  submit () {
-    this.props.submit(this.state.username, this.state.password)
-    this.setState({ username: '', password: '' })
   }
 }
 

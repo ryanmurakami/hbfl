@@ -1,10 +1,10 @@
-const hamsters = require('./hamsters')
-const races = require('./races')
-const user = require('./user')
-const leaderboards = require('./leaderboards')
-const status = require('./status')
+import hamsters from './hamsters'
+import races from './races'
+import user from './user'
+import leaderboards from './leaderboards'
+import status from './status'
 
-module.exports = {
+export default {
   hamsters,
   races,
   user,

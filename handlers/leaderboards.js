@@ -1,13 +1,14 @@
 const users = require('../lib/data/users')
-const Boom = require('boom')
+const Boom = require('@hapi/boom')
 
-module.exports = (request, reply) => {
-  users.getAll()
-    .then(users => rankUsers(users))
-    .then(reply)
-    .catch((err) => {
-      reply(Boom.badImplementation(err))
-    })
+module.exports = async () => {
+  try {
+    const allUsers = await users.getAll()
+    const rank = rankUsers(allUsers)
+    return rank
+  } catch (err) {
+    throw Boom.badImplementation(err)
+  }
 }
 
 function rankUsers (users) {
@@ -16,10 +17,11 @@ function rankUsers (users) {
       return sum + hamster.totalPoints
     }, 0)
 
-    return Object.assign({}, user, {
+    return {
+      ...user,
       totalPoints,
       avgPoints: totalPoints / user.favorites.length
-    })
+    }
   })
 
   const sortedUsers = totalledUsers.sort((a, b) => {

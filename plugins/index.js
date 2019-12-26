@@ -1,4 +1,4 @@
 module.exports = [
-  require('inert'),
-  require('hapi-auth-cookie')
+  require('@hapi/inert'),
+  require('@hapi/cookie')
 ]

@@ -10,20 +10,15 @@ const sgName = 'hamster_sg'
 const keyName = 'hamster_key'
 
 // Do all the things together
-createSecurityGroup(sgName)
-.then(() => {
-  return createKeyPair(keyName)
-})
-.then(helpers.persistKeyPair)
-.then(() => {
-  return createInstance(sgName, keyName)
-})
-.then((data) => {
+try {
+  await createSecurityGroup(sgName)
+  const keyPair = await createKeyPair(keyName)
+  await helpers.persistKeyPair(keyPair)
+  const data = await createInstance(sgName, keyName)
   console.log('Created instance with:', data)
-})
-.catch((err) => {
+} catch (err) {
   console.error('Failed to create instance with:', err)
-})
+}
 
 // Create functions
 

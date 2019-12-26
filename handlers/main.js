@@ -1,13 +1,12 @@
 const initialState = require('../lib/data/initialState')
 const fs = require('fs')
 const path = require('path')
+const util = require('util')
 
-module.exports = (reqest, reply) => {
-  initialState()
-    .then((state) => {
-      fs.readFile(path.join(__dirname, 'template', 'index.html'), (err, data) => {
-        if (err) throw err
-        reply(data.toString().replace(/\$\$state/, JSON.stringify(state)))
-      })
-    })
+const readFileAsync = util.promisify(fs.readFile)
+
+module.exports = async () => {
+  const state = await initialState()
+  const data = await readFileAsync(path.join(__dirname, 'template', 'index.html'))
+  return data.toString().replace(/\$\$state/, JSON.stringify(state))
 }

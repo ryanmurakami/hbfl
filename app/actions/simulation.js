@@ -49,8 +49,8 @@ function start () {
   }
 }
 
-module.exports = {
+export {
+  reset,
   start,
-  stop,
-  reset
+  stop
 }

@@ -83,12 +83,6 @@ module.exports = [
     }
   }, {
     method: 'POST',
-    path: '/simulation/stop',
-    config: {
-      handler: handlers.simulation.stop
-    }
-  }, {
-    method: 'POST',
     path: '/simulation/reset',
     config: {
       handler: handlers.simulation.reset

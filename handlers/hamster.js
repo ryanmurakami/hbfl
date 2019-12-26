@@ -1,10 +1,11 @@
 const hamsters = require('../lib/data/hamsters')
-const Boom = require('boom')
+const Boom = require('@hapi/boom')
 
-module.exports = (request, reply) => {
-  hamsters.get(request.params.id)
-    .then(reply)
-    .catch((err) => {
-      reply(Boom.notFound(err))
-    })
+module.exports = async (request) => {
+  try {
+    const hamster = await hamsters.get(request.params.id)
+    return hamster
+  } catch (err) {
+    throw Boom.notFound(err)
+  }
 }

@@ -1,17 +1,15 @@
 import { connect } from 'react-redux'
 import Simulation from '../../components/config/Simulation/index.jsx'
-import { start, stop, reset } from '../../actions/simulation.js'
+import { reset, start, stop } from '../../actions/simulation.js'
 
 function mapStateToProps () {
   return {}
 }
 
-function mapDispatchToProps (dispatch) {
-  return {
-    start: () => { dispatch(start()) },
-    stop: () => { dispatch(stop()) },
-    reset: () => { dispatch(reset()) }
-  }
+const mapDispatchToProps = {
+  reset,
+  start,
+  stop
 }
 
 const Config = connect(
