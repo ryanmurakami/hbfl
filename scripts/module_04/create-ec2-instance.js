@@ -20,6 +20,9 @@ function createInstance (sgName, keyName) {
     KeyName: keyName,
     MaxCount: 1,
     MinCount: 1,
+    Placement: {
+      AvailabilityZone: '/* TODO: Add the az from the instance that is stopping */'
+    },
     SecurityGroups: [
       sgName
     ]
