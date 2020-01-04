@@ -28,7 +28,7 @@ function createLambda (roleArn, lambdaName, zippedCode) {
     FunctionName: lambdaName,
     Handler: 'index.handler',
     Role: roleArn,
-    Runtime: 'nodejs6.10',
+    Runtime: 'nodejs12.x',
     Description: 'A kinesis consumer for the hbfl demo project',
     MemorySize: 128,
     Publish: true,
