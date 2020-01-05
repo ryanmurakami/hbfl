@@ -6,7 +6,7 @@ const { init: queueInit } = require('./lib/data/lib/sqs.listener')
 
 const options = {
   port: process.env.PORT || 3000,
-  // Commented out until Elasticache is configured
+  // // Commented out until Elasticache is configured
   // cache: [{
   //   name: 'redis',
   //   provider: {
