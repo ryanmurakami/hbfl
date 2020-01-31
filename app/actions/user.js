@@ -1,5 +1,5 @@
 import sa from 'superagent'
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
 function login () {
   return {

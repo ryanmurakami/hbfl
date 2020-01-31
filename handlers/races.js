@@ -1,10 +1,11 @@
 const races = require('../lib/data/races')
-const Boom = require('boom')
+const Boom = require('@hapi/boom')
 
-module.exports = (request, reply) => {
-  races.getAll()
-    .then(reply)
-    .catch((err) => {
-      reply(Boom.notFound(err))
-    })
+module.exports = async () => {
+  try {
+    const allRaces = await races.getAll()
+    return allRaces
+  } catch (err) {
+    throw Boom.notFound(err)
+  }
 }

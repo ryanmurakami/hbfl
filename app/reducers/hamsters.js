@@ -14,4 +14,4 @@ function hamsters (state = [], action) {
   }
 }
 
-module.exports = hamsters
+export default hamsters

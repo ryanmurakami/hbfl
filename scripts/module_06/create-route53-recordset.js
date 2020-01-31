@@ -13,7 +13,7 @@ createRecordSet(hzId)
 function createRecordSet (hzId) {
   // TODO: Create params const
   // Link to ELB Regions:
-  // https://docs.aws.amazon.com/general/latest/gr/rande.html#elb_region
+  // https://docs.aws.amazon.com/general/latest/gr/elb.html
 
   return new Promise((resolve, reject) => {
     // TODO: Create record set

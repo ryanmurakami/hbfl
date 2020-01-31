@@ -5,6 +5,10 @@ import uc from '../../../util/uppercaser.js'
 import assets from '../../../../util/assets'
 
 class Login extends React.Component {
+  static defaultProps = {
+    user: {}
+  }
+
   render () {
     return (
       this.props.user.loggedIn

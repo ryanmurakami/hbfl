@@ -6,4 +6,4 @@ function status (state = [], action) {
   })
 }
 
-module.exports = status
+export default status

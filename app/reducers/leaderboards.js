@@ -9,4 +9,4 @@ function races (state = [], action) {
   }
 }
 
-module.exports = races
+export default races

@@ -1,6 +1,11 @@
 import _ from 'lodash'
 
-function user (state = {}, action) {
+const initialState = {
+  favorites: [],
+  user: {}
+}
+
+function user (state = initialState, action) {
   // clear status when something happens
   state = Object.assign({}, state, {
     status: null
@@ -65,4 +70,4 @@ function user (state = {}, action) {
   }
 }
 
-module.exports = user
+export default user

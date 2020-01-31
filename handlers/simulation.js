@@ -1,22 +1,16 @@
 const simulation = require('../lib/simulation')
 
-function start (request, reply) {
-  simulation.start()
-    .then(reply)
+async function start (request, h) {
+  await simulation.start()
+  return h.response().code(200)
 }
 
-function stop (request, reply) {
-  simulation.stop()
-    .then(reply)
-}
-
-function reset (request, reply) {
-  simulation.reset()
-    .then(reply)
+async function reset (request, h) {
+  await simulation.reset()
+  return h.response().code(200)
 }
 
 module.exports = {
   start,
-  stop,
   reset
 }

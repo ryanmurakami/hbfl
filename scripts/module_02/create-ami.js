@@ -6,7 +6,7 @@
 // Declare local variables
 // TODO: Create an ec2 object
 
-createImage('<imageid>', 'hamsterImage')
+createImage('<instanceid>', 'hamsterImage')
 .then(() => console.log('Complete'))
 
 function createImage (seedInstanceId, imageName) {

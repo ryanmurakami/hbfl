@@ -117,16 +117,12 @@ function unpack (ip) {
       'unzip -o -q ./archive.zip -d hbfl && ' +
       'cd hbfl && ' +
       'npm install && ' +
-      'npm start'
+      'sudo npm start'
 
     exec(command, {
       user: 'bitnami',
       host: ip,
       key: require('fs').readFileSync(path.join(os.homedir(), '.ssh', 'hamster_key'))
     }).pipe(process.stdout)
-    // , (err, stdout, stderr) => {
-    //   if (err) reject(err, stderr)
-    //   else resolve(stdout)
-    // })
   })
 }

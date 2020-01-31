@@ -17,14 +17,34 @@ function createLambdaKinesisRole () {
     iam.createRole(params, (err, data) => {
       if (err) reject(err)
       else {
-        const params = {
+        const kinesisParams = {
           PolicyArn: 'arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess',
           RoleName: roleName
         }
 
-        iam.attachRolePolicy(params, (err) => {
+        const lambdaParams = {
+          PolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+          RoleName: roleName
+        }
+
+        const dynamoParams = {
+          PolicyArn: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess',
+          RoleName: roleName
+        }
+
+        iam.attachRolePolicy(kinesisParams, (err) => {
           if (err) reject(err)
-          else setTimeout(() => resolve(data.Role.Arn), 10000)
+          else {
+            iam.attachRolePolicy(lambdaParams, (err) => {
+              if (err) reject(err)
+              else {
+                iam.attachRolePolicy(dynamoParams, (err) => {
+                  if (err) reject(err)
+                  else setTimeout(() => resolve(data.Role.Arn), 10000)
+                })
+              }
+            })
+          }
         })
       }
     })
