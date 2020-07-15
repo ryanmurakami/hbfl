@@ -29,7 +29,7 @@
     "forever": "2.0.0",
     "glob": "7.1.6",
     "history": "4.10.1",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "moment": "2.24.0",
     "mysql2": "1.3.6",
     "progress": "2.0.0",
