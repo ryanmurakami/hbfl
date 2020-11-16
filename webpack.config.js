@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = {
-  devtool: 'cheap-module-source-map',
+  devtool: 'source-map',
 
   entry: {
     application: './app/index.jsx'
@@ -36,6 +36,7 @@ module.exports = {
   },
 
   optimization: {
+    minimize: true,
     minimizer: [new UglifyJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
   },
 
@@ -52,7 +53,5 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({ filename: 'stylesheet.css' }),
     new webpack.optimize.ModuleConcatenationPlugin()
-  ],
-
-  stats: 'errors-only'
+  ]
 }
