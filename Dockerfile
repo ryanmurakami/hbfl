@@ -10,6 +10,8 @@ RUN npm ci
 
 COPY . /home/hbfl/
 
-CMD [ "npm", "start" ]
+RUN npm run build
+
+CMD [ "node", "index.js" ]
 
 EXPOSE 3000
