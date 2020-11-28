@@ -2,8 +2,11 @@
 node_modules
 jspm_packages
 public/application.min.js
+public/application.min.js.LICENSE.txt
+public/application.min.js.map
 hbfl.sketch
 public/stylesheet.css
+public/stylesheet.css.map
 requirements.txt
 .DS_Store
 **/*.psd
