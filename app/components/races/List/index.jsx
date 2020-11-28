@@ -1,6 +1,5 @@
 import React from 'react'
 import ListItem from '../ListItem/index.jsx'
-import styles from './index.less'
 
 class List extends React.Component {
   render () {
