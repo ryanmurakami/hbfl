@@ -13,12 +13,12 @@
   "author": "Ryan Lewis <ryan@ryanhlewis.com>",
   "license": "MIT",
   "dependencies": {
-    "@hapi/boom": "8.0.1",
-    "@hapi/catbox": "10.2.3",
-    "@hapi/catbox-redis": "5.0.5",
-    "@hapi/cookie": "10.1.2",
-    "@hapi/hapi": "18.4.0",
-    "@hapi/inert": "5.2.2",
+    "@hapi/boom": "9.1.0",
+    "@hapi/catbox": "11.1.1",
+    "@hapi/catbox-redis": "6.0.2",
+    "@hapi/cookie": "11.0.2",
+    "@hapi/hapi": "20.0.3",
+    "@hapi/inert": "6.0.3",
     "archiver": "3.1.1",
     "array-shuffle": "1.0.1",
     "aws-sdk": "2.580.0",
@@ -29,7 +29,7 @@
     "forever": "3.0.4",
     "glob": "7.1.6",
     "history": "4.10.1",
-    "lodash": "4.17.15",
+    "lodash": "4.17.20",
     "moment": "2.24.0",
     "mysql2": "1.3.6",
     "progress": "2.0.0",
@@ -47,7 +47,6 @@
     "ssh-exec": "2.0.0",
     "stream-buffers": "3.0.2",
     "superagent": "5.1.1",
-    "svg-inline-loader": "0.8.0",
     "uuid": "3.3.3"
   },
   "devDependencies": {
@@ -65,6 +64,7 @@
     "mini-css-extract-plugin": "1.3.1",
     "redux-devtools-extension": "2.13.8",
     "style-loader": "2.0.0",
+    "svg-inline-loader": "0.8.0",
     "terser-webpack-plugin": "5.0.3",
     "webpack": "5.8.0",
     "webpack-cli": "4.2.0"
