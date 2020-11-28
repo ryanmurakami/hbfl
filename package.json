@@ -17,7 +17,7 @@
     "@hapi/catbox": "10.2.3",
     "@hapi/catbox-redis": "5.0.5",
     "@hapi/cookie": "10.1.2",
-    "@hapi/hapi": "18.4.0",
+    "@hapi/hapi": "20.0.0",
     "@hapi/inert": "5.2.2",
     "archiver": "3.1.1",
     "array-shuffle": "1.0.1",
