@@ -1,7 +1,7 @@
 const users = require('../lib/data/users')
 const { pick } = require('lodash')
 const Boom = require('@hapi/boom')
-const uuidv4 = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid')
 
 async function login (request, h) {
   const {

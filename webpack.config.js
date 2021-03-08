@@ -53,5 +53,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({ filename: 'stylesheet.css' }),
     new webpack.optimize.ModuleConcatenationPlugin()
-  ]
+  ],
+
+  stats: 'errors-only'
 }
