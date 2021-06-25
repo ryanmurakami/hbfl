@@ -1,7 +1,9 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your regions */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const ec2 = new AWS.EC2()
@@ -10,10 +12,11 @@ const keyName = 'hamster_key'
 const instanceId = '/* TODO: Add the instance Id to stop */'
 
 stopInstance(instanceId)
-.then(() => createInstance(sgName, keyName))
-.then((data) => console.log('Created instance with:', data))
+  .then(() => createInstance(sgName, keyName))
+  .then((data) => console.log('Created instance with:', data))
+  .catch(console.error)
 
-function createInstance (sgName, keyName) {
+async function createInstance (sgName, keyName) {
   const params = {
     ImageId: '/* TODO: Add ami id for aws linux */',
     InstanceType: 't2.micro',
@@ -28,23 +31,21 @@ function createInstance (sgName, keyName) {
     ]
   }
 
-  return new Promise((resolve, reject) => {
-    ec2.runInstances(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  try {
+    await ec2.runInstances(params).promise()
+  } catch (err) {
+    throw new Error(`Error launching instances: ${err}`)
+  }
 }
 
-function stopInstance (instanceId) {
+async function stopInstance (instanceId) {
   const params = {
-    InstanceIds: [ instanceId ]
+    InstanceIds: [instanceId]
   }
 
-  return new Promise((resolve, reject) => {
-    ec2.stopInstances(params, (err) => {
-      if (err) reject(err)
-      else resolve()
-    })
-  })
+  try {
+    await ec2.stopInstances(params).promise()
+  } catch (err) {
+    throw new Error(`Error stopping Instance: ${err}`)
+  }
 }

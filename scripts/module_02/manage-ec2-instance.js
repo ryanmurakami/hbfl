@@ -6,15 +6,17 @@
 // Declare local variables
 // TODO: Create an ec2 object
 
-function listInstances () {
+async function listInstances () {
   // TODO: List instances using ec2.describeInstances()
 }
 
-function terminateInstance (instanceId) {
+async function terminateInstance (instanceId) {
   // TODO: Terminate an instance with a given instanceId
 }
 
 listInstances()
-.then(data => console.log(data))
+  .then(console.log)
+  .catch(console.error)
 // terminateInstance()
-// .then(data => console.log(data))
+//   .then(console.log)
+//   .catch(console.error)

@@ -1,18 +1,23 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const s3 = new AWS.S3()
 
 configureS3Site('/* TODO: Add your S3 bucket name */')
-.then(data => console.log(data))
+  .then(console.log)
+  .catch(console.error)
 
-function configureS3Site (bucketName) {
+async function configureS3Site (bucketName) {
   // TODO: Create params const object
 
-  return new Promise((resolve, reject) => {
+  try {
     // Call putBucketWebsite
-  })
+  } catch (err) {
+    throw new Error(`Error configuring S3 Website: ${err}`)
+  }
 }

@@ -57,7 +57,7 @@ function user (state = initialState, action) {
           ? [action.hamster, ...state.favorites]
           : [action.hamster]
       })
-    case 'USER.UNFAVORITE':
+    case 'USER.UNFAVORITE': {
       const newFavorites = _.filter(
         [...state.favorites],
         fav => fav.id !== action.hamster.id)
@@ -65,6 +65,7 @@ function user (state = initialState, action) {
       return Object.assign({}, state, {
         favorites: newFavorites
       })
+    }
     default:
       return state
   }

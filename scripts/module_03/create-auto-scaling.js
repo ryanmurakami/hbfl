@@ -1,7 +1,9 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const autoScaling = new AWS.AutoScaling()
@@ -11,13 +13,14 @@ const policyName = 'hamsterPolicy'
 const tgArn = '/* TODO: get target group ARN */'
 
 createAutoScalingGroup(asgName, lcName)
-.then(() => createASGPolicy(asgName, policyName))
-.then((data) => console.log(data))
+  .then(() => createASGPolicy(asgName, policyName))
+  .then(console.log)
+  .catch(console.error)
 
-function createAutoScalingGroup (asgName, lcName) {
+async function createAutoScalingGroup (asgName, lcName) {
   // TODO: Create an auto scaling group
 }
 
-function createASGPolicy (asgName, policyName) {
+async function createASGPolicy (asgName, policyName) {
   // TODO: Create an auto scaling group policy
 }

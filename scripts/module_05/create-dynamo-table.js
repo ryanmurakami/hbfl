@@ -1,19 +1,24 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 // TODO: Declare dynamoDB object
 
 createTable('hamsters')
-.then(() => createTable('races'))
-.then(data => console.log(data))
+  .then(() => createTable('races'))
+  .then(console.log)
+  .catch(console.error)
 
-function createTable (tableName) {
+async function createTable (tableName) {
   // TODO: Declare params for createTable
 
-  return new Promise((resolve, reject) => {
+  try {
     // TODO: Call createTable function
-  })
+  } catch (err) {
+    throw new Error(`Error creating DynamoDB Table: ${err}`)
+  }
 }

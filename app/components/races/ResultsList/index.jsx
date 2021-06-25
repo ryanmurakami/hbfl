@@ -13,9 +13,9 @@ class ResultsList extends React.Component {
             <th>Hamster Name</th>
           </tr>
         </thead>
-        {this.props.race.results.map((result) => {
+        {this.props.race.results.map((result, i) => {
           return (
-            <tr className={styles.row}>
+            <tr className={styles.row} key={i}>
               <td>{result.place}</td>
               <td>
                 <Link to={`/hamster/${result.hamsterId}`}>

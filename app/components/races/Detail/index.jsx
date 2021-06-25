@@ -24,7 +24,7 @@ class Detail extends React.Component {
         </div>
         {
           (race.results && <ResultsList race={race} />) ||
-          <div className={styles.comingSoon}>Coming soon!</div>
+            <div className={styles.comingSoon}>Coming soon!</div>
         }
       </div>
     )

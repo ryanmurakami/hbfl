@@ -7,15 +7,15 @@ function mapStateToProps (state, ownProps) {
   const hamster = _.find(state.hamsters, hamster => hamster.id === hamsterId)
   const results = (hamster.results && hamster.results.length)
     ? hamster.results.map((result) => {
-      const race = _.find(state.races, race => race.id === result.raceId)
+        const race = _.find(state.races, race => race.id === result.raceId)
 
-      return {
-        raceId: result.raceId,
-        name: race.venue,
-        place: result.place,
-        date: race.date
-      }
-    })
+        return {
+          raceId: result.raceId,
+          name: race.venue,
+          place: result.place,
+          date: race.date
+        }
+      })
     : []
 
   return {

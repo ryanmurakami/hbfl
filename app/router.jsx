@@ -8,16 +8,19 @@ class Router extends React.Component {
     return (
       <ConnectedRouter history={this.props.history}>
         <div>
-          { routes.map((route, i) => (
-            <Route
-              key={i}
-              exact={route.exact}
-              path={route.path}
-              component={route.component}
-            />
-          ))}
+          {
+            routes.map((route, i) => (
+              <Route
+                key={i}
+                exact={route.exact}
+                path={route.path}
+                component={route.component}
+              />
+            ))
+          }
         </div>
-      </ConnectedRouter>)
+      </ConnectedRouter>
+    )
   }
 }
 

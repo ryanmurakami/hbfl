@@ -16,16 +16,16 @@ function getPublicFiles () {
         })
 
         Promise.all(filePromises)
-        .then((fileContents) => {
-          return fileContents.map((contents, i) => {
-            return {
-              contents,
-              name: files[i].replace('../../public/', '')
-            }
+          .then((fileContents) => {
+            return fileContents.map((contents, i) => {
+              return {
+                contents,
+                name: files[i].replace('../../public/', '')
+              }
+            })
           })
-        })
-        .then(resolve)
-        .catch(reject)
+          .then(resolve)
+          .catch(reject)
       }
     })
   })

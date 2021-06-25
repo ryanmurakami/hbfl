@@ -1,5 +1,10 @@
 const AWS = require('aws-sdk')
+const config = require('config')
+
 const assets = require('../../util/assets')
+
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 const hamsterData = [
   {
@@ -62,47 +67,45 @@ const raceData = [
   }
 ]
 
-function getHamsterData () {
-  return Promise.resolve(hamsterData)
+async function getHamsterData () {
+  return hamsterData
 }
 
-function getRaceData () {
-  return Promise.resolve(raceData)
+async function getRaceData () {
+  return raceData
 }
 
-function createSecurityGroup (sgName, port) {
-  return new Promise((resolve, reject) => {
-    const ec2 = new AWS.EC2()
-    const params = {
-      Description: sgName,
-      GroupName: sgName
-    }
+async function createSecurityGroup (sgName, port) {
+  const ec2 = new AWS.EC2()
+  const params = {
+    Description: sgName,
+    GroupName: sgName
+  }
 
-    ec2.createSecurityGroup(params, (err, data) => {
-      if (err) reject(err)
-      else {
-        const params = {
-          GroupId: data.GroupId,
-          IpPermissions: [
+  try {
+    const data = await ec2.createSecurityGroup(params).promise()
+
+    const ruleParams = {
+      GroupId: data.GroupId,
+      IpPermissions: [
+        {
+          IpProtocol: 'tcp',
+          FromPort: port,
+          ToPort: port,
+          IpRanges: [
             {
-              IpProtocol: 'tcp',
-              FromPort: port,
-              ToPort: port,
-              IpRanges: [
-                {
-                  CidrIp: '0.0.0.0/0'
-                }
-              ]
+              CidrIp: '0.0.0.0/0'
             }
           ]
         }
-        ec2.authorizeSecurityGroupIngress(params, (err) => {
-          if (err) reject(err)
-          else resolve(data.GroupId)
-        })
-      }
-    })
-  })
+      ]
+    }
+
+    await ec2.authorizeSecurityGroupIngress(ruleParams).promise()
+    return data.GroupId
+  } catch (err) {
+    throw new Error(`Error creating Security Group: ${err}`)
+  }
 }
 
 module.exports = {

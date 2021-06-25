@@ -1,8 +1,11 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
+
 const helpers = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const lambda = new AWS.Lambda()
@@ -11,16 +14,16 @@ const kinesisArn = '/* TODO: Add your kinesis ARN */'
 let roleArn
 
 helpers.createLambdaKinesisRole()
-.then((arn) => {
-  roleArn = arn
-  return helpers.zipLambdaFile()
-})
-.then((codeBuffer) => createLambda(roleArn, functionName, codeBuffer))
-.then(() => createTrigger(kinesisArn, functionName))
-.then(data => console.log(data))
-.catch(err => console.error(err))
+  .then(arn => {
+    roleArn = arn
+    return helpers.zipLambdaFile()
+  })
+  .then(codeBuffer => createLambda(roleArn, functionName, codeBuffer))
+  .then(() => createTrigger(kinesisArn, functionName))
+  .then(console.log)
+  .catch(console.error)
 
-function createLambda (roleArn, lambdaName, zippedCode) {
+async function createLambda (roleArn, lambdaName, zippedCode) {
   const params = {
     Code: {
       ZipFile: zippedCode
@@ -35,21 +38,20 @@ function createLambda (roleArn, lambdaName, zippedCode) {
     Timeout: 15
   }
 
-  return new Promise((resolve, reject) => {
-    lambda.createFunction(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  try {
+    await lambda.createFunction(params).promise()
+  } catch (err) {
+    throw new Error(`Error creating Lambda Function: ${err}`)
+  }
 }
 
-function createTrigger (kinesisArn, lambdaName) {
+async function createTrigger (kinesisArn, lambdaName) {
   // TODO: Create params const for trigger
 
-  return new Promise((resolve, reject) => {
-    lambda.createEventSourceMapping(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  try {
+    const data = await lambda.createEventSourceMapping(params).promise()
+    return data
+  } catch (err) {
+    throw new Error(`Error creating Lambda Trigger: ${err}`)
+  }
 }

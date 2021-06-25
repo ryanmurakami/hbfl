@@ -1,55 +1,26 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const helpers = require('./helpers')
 
-const ec2 = new AWS.EC2()
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
+
 // TODO: Create an rds object
 const dbName = 'user'
 
-createSecurityGroup(dbName)
-.then(sgId => createDatabase(dbName, sgId))
-.then(data => console.log(data))
+helpers.createSecurityGroup(dbName, 3306)
+  .then(sgId => createDatabase(dbName, sgId))
+  .then(console.log)
+  .catch(console.error)
 
-function createDatabase (dbName, sgId) {
+async function createDatabase (dbName, sgId) {
   // TODO: Create the params object
 
-  return new Promise((resolve, reject) => {
+  try {
     // TODO: Create the db instance
-  })
-}
-
-function createSecurityGroup (dbName) {
-  const params = {
-    Description: `security group for ${dbName}`,
-    GroupName: `${dbName}-db-sg`
+  } catch (err) {
+    throw new Error(`Error creating RDS Database Instance: ${err}`)
   }
-
-  return new Promise((resolve, reject) => {
-    ec2.createSecurityGroup(params, (err, data) => {
-      if (err) reject(err)
-      else {
-        const sgGroupId = data.GroupId
-        const params = {
-          GroupId: sgGroupId,
-          IpPermissions: [
-            {
-              IpProtocol: 'tcp',
-              FromPort: 3306,
-              ToPort: 3306,
-              IpRanges: [
-                {
-                  CidrIp: '0.0.0.0/0'
-                }
-              ]
-            }
-          ]
-        }
-        ec2.authorizeSecurityGroupIngress(params, (err, data) => {
-          if (err) reject(err)
-          else resolve(sgGroupId)
-        })
-      }
-    })
-  })
 }

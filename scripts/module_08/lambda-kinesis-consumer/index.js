@@ -1,47 +1,44 @@
 const AWS = require('aws-sdk')
+const config = require('config')
+
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 const RACES_TABLE = 'races'
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
-
 const client = new AWS.DynamoDB.DocumentClient()
 
-exports.handler = (event, context, callback) => {
-  const promises = event.Records.map((record) => {
-    const payload = Buffer.from(record.kinesis.data, 'base64').toString('ascii')
-    const result = JSON.parse(payload)
-    return putResults(result)
-  })
-
-  Promise.all(promises)
-    .then(() => callback(null))
-    .catch(err => callback(err))
+exports.handler = async event => {
+  try {
+    for (const record of event.Records) {
+      const payload = Buffer.from(record.kinesis.data, 'base64').toString('ascii')
+      const result = JSON.parse(payload)
+      await putResults(result)
+    }
+  } catch (err) {
+    throw new Error(`Error processing records: ${err}`)
+  }
 }
 
-function putResults (result) {
-  return new Promise((resolve, reject) => {
-    const getParams = {
-      TableName: RACES_TABLE,
-      Key: {
-        id: result.race.id
-      }
+async function putResults (result) {
+  const getParams = {
+    TableName: RACES_TABLE,
+    Key: {
+      id: result.race.id
     }
-    client.get(getParams, (err, data) => {
-      if (err) {
-        console.error(err)
-      } else {
-        data.Item.results = result.results
+  }
 
-        const putParams = {
-          TableName: RACES_TABLE,
-          Item: data.Item
-        }
+  try {
+    const data = await client.get(getParams).promise()
+    data.Item.results = result.results
 
-        client.put(putParams, (err, data) => {
-          if (err) reject(err)
-          else resolve(data)
-        })
-      }
-    })
-  })
+    const putParams = {
+      TableName: RACES_TABLE,
+      Item: data.Item
+    }
+
+    await client.put(putParams).promise()
+  } catch (err) {
+    throw new Error(`Error putting results in DynamoDB Table: ${err}`)
+  }
 }

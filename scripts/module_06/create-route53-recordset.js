@@ -1,21 +1,26 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const route53 = new AWS.Route53()
 const hzId = '/* TODO: Add your hostedzone id */'
 
 createRecordSet(hzId)
-.then(data => console.log(data))
+  .then(console.log)
+  .catch(console.error)
 
-function createRecordSet (hzId) {
+async function createRecordSet (hzId) {
   // TODO: Create params const
   // Link to ELB Regions:
   // https://docs.aws.amazon.com/general/latest/gr/elb.html
 
-  return new Promise((resolve, reject) => {
+  try {
     // TODO: Create record set
-  })
+  } catch (err) {
+    throw new Error(`Error creating Route 53 Record Set: ${err}`)
+  }
 }

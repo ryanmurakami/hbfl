@@ -22,7 +22,11 @@ const options = {
 const init = async () => {
   const server = Hapi.Server(options)
 
-  await server.register(plugins)
+  try {
+    await server.register(plugins)
+  } catch (err) {
+    throw new Error(`Error when registering hapi plugins: ${err}`)
+  }
 
   // hapi-auth-cookie stuff
   const cache = server.cache({
@@ -62,16 +66,17 @@ const init = async () => {
 
   // initialize database and start server
   usersInit()
-  // Commented out until SQS is configured
-  // .then(() => queueInit())
-  .then(async () => {
-    try {
-      await server.start()
-      console.log(`Server started at http://localhost:${server.info.port}`)
-    } catch (err) {
-      console.error(`Server could not start. Error: ${err}`)
-    }
-  })
+    // Commented out until SQS is configured
+    // .then(() => queueInit())
+    .then(async () => {
+      try {
+        await server.start()
+        console.log(`Server started at http://localhost:${server.info.port}`)
+      } catch (err) {
+        console.error(`Server could not start. Error: ${err}`)
+      }
+    })
+    .catch(console.error)
 }
 
 init()

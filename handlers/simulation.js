@@ -1,11 +1,11 @@
 const simulation = require('../lib/simulation')
 
-async function start (request, h) {
+async function start (_, h) {
   await simulation.start()
   return h.response().code(200)
 }
 
-async function reset (request, h) {
+async function reset (_, h) {
   await simulation.reset()
   return h.response().code(200)
 }

@@ -7,8 +7,9 @@
 // TODO: Create an ec2 object
 
 createImage('<instanceid>', 'hamsterImage')
-.then(() => console.log('Complete'))
+  .then(() => console.log('Complete'))
+  .catch(console.error)
 
-function createImage (seedInstanceId, imageName) {
+async function createImage (seedInstanceId, imageName) {
   // TODO: Implement AMI creation
 }

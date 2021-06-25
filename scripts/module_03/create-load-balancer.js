@@ -1,8 +1,11 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
+
 const helpers = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 // TODO: Create a new ELBv2 object
@@ -15,25 +18,26 @@ const subnets = [
 ]
 
 helpers.createSecurityGroup(sgName, 80)
-.then((sgId) =>
-  Promise.all([
-    createTargetGroup(tgName),
-    createLoadBalancer(elbName, sgId)
-  ])
-)
-.then((results) => {
-  const tgArn = results[0].TargetGroups[0].TargetGroupArn
-  const lbArn = results[1].LoadBalancers[0].LoadBalancerArn
-  console.log('Target Group Name ARN:', tgArn)
-  return createListener(tgArn, lbArn)
-})
-.then((data) => console.log(data))
+  .then((sgId) =>
+    Promise.all([
+      createTargetGroup(tgName),
+      createLoadBalancer(elbName, sgId)
+    ])
+  )
+  .then((results) => {
+    const tgArn = results[0].TargetGroups[0].TargetGroupArn
+    const lbArn = results[1].LoadBalancers[0].LoadBalancerArn
+    console.log('Target Group Name ARN:', tgArn)
+    return createListener(tgArn, lbArn)
+  })
+  .then(console.log)
+  .catch(console.error)
 
-function createLoadBalancer (lbName, sgId) {
+async function createLoadBalancer (lbName, sgId) {
   // TODO: Create a load balancer
 }
 
-function createTargetGroup (tgName) {
+async function createTargetGroup (tgName) {
   const params = {
     Name: tgName,
     Port: 3000,
@@ -41,15 +45,15 @@ function createTargetGroup (tgName) {
     VpcId: vpcId
   }
 
-  return new Promise((resolve, reject) => {
-    elbv2.createTargetGroup(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  try {
+    const data = await elbv2.createTargetGroup(params).promise()
+    return data
+  } catch (err) {
+    throw new Error(`Error creating Target Group: ${err}`)
+  }
 }
 
-function createListener (tgArn, lbArn) {
+async function createListener (tgArn, lbArn) {
   const params = {
     DefaultActions: [
       {
@@ -62,10 +66,10 @@ function createListener (tgArn, lbArn) {
     Protocol: 'HTTP'
   }
 
-  return new Promise((resolve, reject) => {
-    elbv2.createListener(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  try {
+    const data = await elbv2.createListener(params).promise()
+    return data
+  } catch (err) {
+    throw new Error(`Error creating ELB Listener: ${err}`)
+  }
 }

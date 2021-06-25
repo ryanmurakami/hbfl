@@ -1,19 +1,25 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
+
 const cfParams = require('./cloudfront-parameters')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 // TODO: Create CloudFront SDK Object
 
 createDistribution('/* TODO: Add your bucket name */')
-.then(data => console.log(data))
+  .then(console.log)
+  .catch(console.error)
 
-function createDistribution (bucketName) {
+async function createDistribution (bucketName) {
   // TODO: Create params const object
 
-  return new Promise((resolve, reject) => {
+  try {
     // TODO: Call createDistribution
-  })
+  } catch (err) {
+    throw new Error(`Error creating CloudFront Distribution: ${err}`)
+  }
 }

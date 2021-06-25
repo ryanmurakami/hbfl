@@ -1,7 +1,9 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const cw = new AWS.CloudWatch()
@@ -11,12 +13,15 @@ const tg = '/* TODO: Add last part of Target Group ARN */'
 const lb = '/* TODO: Add last part of Load Balancer ARN */'
 
 createCloudWatchAlarm(alarmName, topicArn, tg, lb)
-.then(data => console.log(data))
+  .then(console.log)
+  .catch(console.error)
 
-function createCloudWatchAlarm (alarmName, topicArn, tg, lb) {
+async function createCloudWatchAlarm (alarmName, topicArn, tg, lb) {
   // TODO: Create params const object
 
-  return new Promise((resolve, reject) => {
+  try {
     // TODO: Call putMetricAlarm
-  })
+  } catch (err) {
+    throw new Error(`Error creating CloudWatch Alarm: ${err}`)
+  }
 }

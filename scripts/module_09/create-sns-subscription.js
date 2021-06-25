@@ -1,7 +1,9 @@
 // Imports
 const AWS = require('aws-sdk')
+const config = require('config')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
 
 // Declare local variables
 const sns = new AWS.SNS()
@@ -10,12 +12,15 @@ const endpoint = '/* TODO: Add your mobile number with country code */'
 const topicArn = '/* TODO: Add your sns topic arn */'
 
 createSubscription(type, topicArn, endpoint)
-.then(data => console.log(data))
+  .then(console.log)
+  .catch(console.error)
 
-function createSubscription (type, topicArn, endpoint) {
+async function createSubscription (type, topicArn, endpoint) {
   // TODO: Create params const
 
-  return new Promise((resolve, reject) => {
+  try {
     // TODO: Subscribe
-  })
+  } catch (err) {
+    throw new Error(`Error creating SNS Subscription: ${err}`)
+  }
 }

@@ -3,8 +3,12 @@ const archiver = require('archiver')
 const path = require('path')
 const streamBuffers = require('stream-buffers')
 const fs = require('fs')
+const config = require('config')
 
-function createLambdaKinesisRole () {
+const awsRegion = config.get('aws.region')
+AWS.config.update({ region: awsRegion })
+
+async function createLambdaKinesisRole () {
   const roleName = 'lambda-kinesis-consumer-role'
   const iam = new AWS.IAM()
   const params = {
@@ -13,41 +17,47 @@ function createLambdaKinesisRole () {
     AssumeRolePolicyDocument: '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" } ] }'
   }
 
-  return new Promise((resolve, reject) => {
-    iam.createRole(params, (err, data) => {
-      if (err) reject(err)
-      else {
-        const kinesisParams = {
-          PolicyArn: 'arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess',
-          RoleName: roleName
-        }
+  let roleArn
 
-        const lambdaParams = {
-          PolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
-          RoleName: roleName
-        }
+  try {
+    const data = await iam.createRole(params).promise()
+    roleArn = data.Role.Arn
+  } catch (err) {
+    throw new Error(`Error creating IAM Role: ${err}`)
+  }
 
-        const dynamoParams = {
-          PolicyArn: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess',
-          RoleName: roleName
-        }
+  try {
+    const kinesisParams = {
+      PolicyArn: 'arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess',
+      RoleName: roleName
+    }
+    await iam.attachRolePolicy(kinesisParams).promise()
+  } catch (err) {
+    throw new Error(`Error attaching Kinesis Policy to IAM Role: ${err}`)
+  }
 
-        iam.attachRolePolicy(kinesisParams, (err) => {
-          if (err) reject(err)
-          else {
-            iam.attachRolePolicy(lambdaParams, (err) => {
-              if (err) reject(err)
-              else {
-                iam.attachRolePolicy(dynamoParams, (err) => {
-                  if (err) reject(err)
-                  else setTimeout(() => resolve(data.Role.Arn), 10000)
-                })
-              }
-            })
-          }
-        })
-      }
-    })
+  try {
+    const lambdaParams = {
+      PolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+      RoleName: roleName
+    }
+    await iam.attachRolePolicy(lambdaParams).promise()
+  } catch (err) {
+    throw new Error(`Error attaching Lambda Policy to IAM Role: ${err}`)
+  }
+
+  try {
+    const dynamoParams = {
+      PolicyArn: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess',
+      RoleName: roleName
+    }
+    await iam.attachRolePolicy(dynamoParams).promise()
+  } catch (err) {
+    throw new Error(`Error attaching DynamoDB Policy to IAM Role: ${err}`)
+  }
+
+  return new Promise(resolve => {
+    setTimeout(() => resolve(roleArn), 10000)
   })
 }
 
