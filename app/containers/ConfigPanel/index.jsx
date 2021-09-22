@@ -7,9 +7,9 @@ function mapStateToProps () {
 }
 
 const mapDispatchToProps = {
-  handleReset: reset,
-  handleStart: start,
-  handleStop: stop
+  reset,
+  start,
+  stop
 }
 
 const Config = connect(

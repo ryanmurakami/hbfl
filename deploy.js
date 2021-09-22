@@ -17,24 +17,20 @@ let bar
 let len
 let prevProgress = 0
 
-output.on('close', async () => {
+output.on('close', () => {
   const ip = process.argv[2]
 
   console.log('\nArchiving Complete')
 
-  try {
-    await upload(archivePath, ip)
+  upload(archivePath, ip)
+  .then(() => {
     console.log('\nUploading Complete')
-  } catch (err) {
-    console.error('\nError Uploading: ', err)
-  }
-
-  try {
-    await unpack(ip)
+    return unpack(ip)
+  })
+  .then(() => {
     console.log('Deployment Complete')
-  } catch (err) {
-    console.error('\nError unpacking zip file: ', err)
-  }
+  })
+  .catch(err => console.error(err))
 })
 
 archive.on('warning', (err) => {

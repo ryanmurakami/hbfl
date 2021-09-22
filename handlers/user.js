@@ -3,13 +3,13 @@ const { pick } = require('lodash')
 const Boom = require('@hapi/boom')
 const { v4: uuidv4 } = require('uuid')
 
-async function login (req) {
+async function login (request, h) {
   const {
     password,
     username
-  } = req.payload
+  } = request.payload
 
-  if (req.auth.isAuthenticated) {
+  if (request.auth.isAuthenticated) {
     return
   }
 
@@ -17,52 +17,52 @@ async function login (req) {
     const user = await users.authenticate(username, password)
     const sid = uuidv4()
     const sanitizedUser = pick(user, ['username', 'id'])
-    await req.server.app.cache.set(sid, { account: sanitizedUser }, 0)
-    req.cookieAuth.set({ sid })
+    await request.server.app.cache.set(sid, { account: sanitizedUser }, 0)
+    request.cookieAuth.set({ sid })
     return sanitizedUser
   } catch (err) {
     throw Boom.unauthorized(err)
   }
 }
 
-function logout (req, h) {
-  req.cookieAuth.clear()
+function logout (request, h) {
+  request.cookieAuth.clear()
   return h.redirect('/')
 }
 
-async function info (req) {
-  if (!req.auth.isAuthenticated) {
+async function info (request) {
+  if (!request.auth.isAuthenticated) {
     throw Boom.unauthorized('Must login first')
   }
 
   try {
-    const user = await users.get(req.auth.credentials.id)
+    const user = await users.get(request.auth.credentials.id)
     return user
   } catch (err) {
     throw Boom.badImplementation(err)
   }
 }
 
-async function favorite (req, h) {
-  if (!req.auth.isAuthenticated) {
+async function favorite (request, h) {
+  if (!request.auth.isAuthenticated) {
     throw Boom.unauthorized('Must login first')
   }
 
   try {
-    await users.favorite(req.auth.credentials.id, req.params.id)
+    await users.favorite(request.auth.credentials.id, request.params.id)
     return h.response().code(200)
   } catch (err) {
     throw Boom.badImplementation(err)
   }
 }
 
-async function unfavorite (req, h) {
-  if (!req.auth.isAuthenticated) {
+async function unfavorite (request, h) {
+  if (!request.auth.isAuthenticated) {
     throw Boom.unauthorized('Must login first')
   }
 
   try {
-    await users.unfavorite(req.auth.credentials.id, req.params.id)
+    await users.unfavorite(request.auth.credentials.id, request.params.id)
     return h.response().code(200)
   } catch (err) {
     throw Boom.badImplementation(err)

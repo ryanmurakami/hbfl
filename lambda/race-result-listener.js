@@ -1,11 +1,9 @@
 const AWS = require('aws-sdk')
-const config = require('config')
-
-const awsRegion = config.get('aws.region')
-AWS.config.update({ region: awsRegion })
 
 const RACE_QUEUE = 'race-result-queue'
 const HAMSTERS_TABLE = 'hamsters'
+
+AWS.config.update({ region: 'us-east-1' })
 
 const sqs = new AWS.SQS()
 const client = new AWS.DynamoDB.DocumentClient()

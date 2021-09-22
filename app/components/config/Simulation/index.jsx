@@ -6,10 +6,10 @@ class Simulation extends React.Component {
     return (
       <div>
         <div className={styles.section}>
-          <button onClick={this.props.handleStart}>Run Simulation</button>
+          <button onClick={this.props.start}>Run Simulation</button>
         </div>
         <div className={styles.section}>
-          <button onClick={this.props.handleReset}>Reset Results</button>
+          <button onClick={this.props.reset}>Reset Results</button>
         </div>
       </div>
     )

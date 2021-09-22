@@ -9,7 +9,6 @@ class List extends React.Component {
     // get leaderboards information
     props.fetch()
   }
-
   render () {
     return (
       <div className={styles.container}>
@@ -21,16 +20,14 @@ class List extends React.Component {
               <th>Average Points <small>(lower is better)</small></th>
             </tr>
           </thead>
-          {
-            this.props.standings &&
-              this.props.standings.map((standing, i) => (
-                <ListItem
-                  avgPoints={standing.avgPoints}
-                  key={i}
-                  name={standing.name}
-                  rank={standing.rank}
-                />
-              ))
+          {this.props.standings &&
+            this.props.standings.map(standing => (
+              <ListItem
+                rank={standing.rank}
+                name={standing.name}
+                avgPoints={standing.avgPoints}
+              />
+            ))
           }
         </table>
       </div>

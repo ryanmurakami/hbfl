@@ -22,11 +22,10 @@ class Card extends React.Component {
             <div className={styles.rank}>
               Rank: {this.props.rank}
             </div>
-            {
-              this.props.type &&
-                <div className={styles.type}>
-                  Type: {this.props.type}
-                </div>
+            {this.props.type &&
+              <div className={styles.type}>
+                Type: {this.props.type}
+              </div>
             }
           </div>
         </div>

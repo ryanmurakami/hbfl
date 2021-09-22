@@ -10,7 +10,6 @@ class Detail extends React.Component {
     // get user information
     props.fetch()
   }
-
   render () {
     const user = this.props.user
     const hamsters = user.favorites
@@ -24,12 +23,11 @@ class Detail extends React.Component {
         </div>
         <div className={styles.favTitle}>Favorites</div>
         <ul>
-          {
-            user.favorites &&
-              <Grid
-                hamsters={hamsters}
-                loggedIn={user.loggedIn}
-              />
+          {user.favorites &&
+            <Grid
+              hamsters={hamsters}
+              loggedIn={user.loggedIn}
+            />
           }
         </ul>
       </div>
