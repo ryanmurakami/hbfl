@@ -5,7 +5,7 @@ class Footer extends React.Component {
   render () {
     return (
       <footer className={styles.footer}>
-        &copy; HBFL &amp; Ryan Lewis 2017-2020
+        &copy; HBFL &amp; Ryan Lewis 2021
       </footer>
     )
   }

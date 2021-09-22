@@ -1,11 +1,13 @@
 const Hapi = require('@hapi/hapi')
+require('dotenv').config()
+
 const plugins = require('./plugins')
 const routes = require('./routes')
 const { init: usersInit } = require('./lib/data/users')
 const { init: queueInit } = require('./lib/data/lib/sqs.listener')
 
 const options = {
-  port: process.env.PORT || 3000,
+  port: 3000,
   // // Commented out until Elasticache is configured
   // cache: [{
   //   name: 'redis',
