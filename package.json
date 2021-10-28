@@ -7,13 +7,15 @@
     "dev": "webpack-dev-server",
     "build": "webpack",
     "prestart": "npm run build",
-    "start": "pm2 start index.js --name hbfl -f",
-    "stop": "pm2 stop hbfl",
+    "start": "node index.js",
+    "start-pm2": "pm2 start index.js --name hbfl -f",
+    "stop-pm2": "pm2 stop hbfl",
     "deploy": "node deploy.js"
   },
   "author": "Ryan Lewis <ryan@ryanhlewis.com>",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-ec2": "3.33.0",
     "@aws-sdk/client-kinesis": "3.32.0",
     "@aws-sdk/client-sns": "3.32.0",
     "@aws-sdk/client-sqs": "3.32.0",
