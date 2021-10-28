@@ -7,8 +7,9 @@
     "dev": "webpack-dev-server",
     "build": "webpack",
     "prestart": "npm run build",
-    "start": "pm2 start index.js --name hbfl -f",
-    "stop": "pm2 stop hbfl",
+    "start": "node index.js",
+    "start-pm2": "pm2 start index.js --name hbfl -f",
+    "stop-pm2": "pm2 stop hbfl",
     "deploy": "node deploy.js"
   },
   "author": "Ryan Lewis <ryan@ryanhlewis.com>",
