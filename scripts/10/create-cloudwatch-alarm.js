@@ -1,22 +1,26 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  PutMetricAlarmCommand
+} = require('@aws-sdk/client-cloudwatch')
+const { sendCloudWatchCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
-const cw = new AWS.CloudWatch()
 const alarmName = 'hamster-elb-alarm'
 const topicArn = '/* TODO: Add your SNS topic ARN */'
 const tg = '/* TODO: Add last part of Target Group ARN */'
 const lb = '/* TODO: Add last part of Load Balancer ARN */'
 
-createCloudWatchAlarm(alarmName, topicArn, tg, lb)
-.then(data => console.log(data))
+async function execute () {
+  try {
+    const response = await createCloudWatchAlarm(alarmName, topicArn, tg, lb)
+    console.log(response)
+  } catch (err) {
+    console.error('Error creating CloudWatch alarm:', err)
+  }
+}
 
 function createCloudWatchAlarm (alarmName, topicArn, tg, lb) {
-  // TODO: Create params const object
-
-  return new Promise((resolve, reject) => {
-    // TODO: Call putMetricAlarm
-  })
+  // TODO: Create alarm with PutMetricAlarmCommand
 }
+
+execute()

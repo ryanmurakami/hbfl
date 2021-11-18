@@ -1,19 +1,24 @@
 // Imports
-const AWS = require('aws-sdk')
-const cfParams = require('./cloudfront-parameters')
+const { CreateDistributionCommand } = require('@aws-sdk/client-cloudfront')
+const {
+  defaultCacheBehavior,
+  origins
+} = require('./cloudfront-parameters')
+const { sendCloudFrontCommand: sendCommand } = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const bucketName = '/* TODO: Add your bucket name */'
 
-// Declare local variables
-// TODO: Create CloudFront SDK Object
-
-createDistribution('/* TODO: Add your bucket name */')
-.then(data => console.log(data))
-
-function createDistribution (bucketName) {
-  // TODO: Create params const object
-
-  return new Promise((resolve, reject) => {
-    // TODO: Call createDistribution
-  })
+async function execute () {
+  try {
+    const response = await createDistribution(bucketName)
+    console.log(response)
+  } catch (err) {
+    console.error('Error creating distribution:', err)
+  }
 }
+
+async function createDistribution (bucketName) {
+  // TODO: Create CloudFront Distribution
+}
+
+execute()

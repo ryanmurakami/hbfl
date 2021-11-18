@@ -1,22 +1,29 @@
 // Imports
-const AWS = require('aws-sdk')
-const helpers = require('./helpers')
+const {
+  BatchWriteCommand
+} = require('@aws-sdk/lib-dynamodb')
+const {
+  getHamsterData,
+  getRaceData,
+  sendDynamoItemCommand
+} = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+async function execute () {
+  try {
+    const hamstersData = await getHamsterData()
+    await populateTable('hamsters', hamstersData)
 
-// Declare local variables
-// TODO: Declare dynamoDB DocumentClient object
+    const raceData = await getRaceData()
+    const response = await populateTable('races', raceData)
 
-helpers.getHamsterData()
-.then(data => populateTable('hamsters', data))
-.then(() => helpers.getRaceData())
-.then(data => populateTable('races', data))
-.then(data => console.log(data))
-
-function populateTable (tableName, data) {
-  // TODO: Create params const object
-
-  return new Promise((resolve, reject) => {
-    // TODO: Call batch write function
-  })
+    console.log(response)
+  } catch (err) {
+    console.error('Could not populate table:', err)
+  }
 }
+
+async function populateTable (tableName, data) {
+  // TODO: Upload to table with batch write
+}
+
+execute()

@@ -1,23 +1,33 @@
 // Imports
-const AWS = require('aws-sdk')
+const {
+  CreateAutoScalingGroupCommand,
+  PutScalingPolicyCommand
+} = require('@aws-sdk/client-auto-scaling')
 
-AWS.config.update({ region: '/* TODO: add your region */' })
+const { sendAutoScalingCommand } = require('./helpers')
 
 // Declare local variables
-const autoScaling = new AWS.AutoScaling()
 const asgName = 'hamsterASG'
-const lcName = 'hamsterLC'
+const ltName = 'hamsterLT'
 const policyName = 'hamsterPolicy'
 const tgArn = '/* TODO: get target group ARN */'
 
-createAutoScalingGroup(asgName, lcName)
-.then(() => createASGPolicy(asgName, policyName))
-.then((data) => console.log(data))
+async function execute () {
+  try {
+    const response = await createAutoScalingGroup(asgName, ltName)
+    await createASGPolicy(asgName, policyName)
+    console.log('Created auto scaling group with:', response)
+  } catch (err) {
+    console.error('Failed to create auto scaling group with:', err)
+  }
+}
 
-function createAutoScalingGroup (asgName, lcName) {
+function createAutoScalingGroup (asgName, ltName) {
   // TODO: Create an auto scaling group
 }
 
 function createASGPolicy (asgName, policyName) {
   // TODO: Create an auto scaling group policy
 }
+
+execute()

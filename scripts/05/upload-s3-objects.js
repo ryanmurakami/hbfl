@@ -1,29 +1,29 @@
 // Imports
-const AWS = require('aws-sdk')
+const {
+  PutObjectCommand
+} = require('@aws-sdk/client-s3')
 const helpers = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
-
 // Declare local variables
-const s3 = new AWS.S3()
-const bucketName = '/* TODO: Make this bucket name match what you created */'
+const bucketName = '/* TODO: Bucket you created */'
 
-helpers.getPublicFiles()
-.then(files => uploadS3Objects(bucketName, files))
-.then(data => console.log(data))
+async function execute () {
+  try {
+    const files = await helpers.getPublicFiles()
 
-function uploadS3Objects (bucketName, files) {
-  // TODO: Define putObject params object
+    for (const file of files) {
+      const response = await uploadS3Object(bucketName, file)
+      console.log('Uploaded file with ETag:', response.ETag)
+    }
 
-  const filePromises = files.map((file) => {
-    const newParams = Object.assign({}, params, {
-      // TODO: Add individual file params
-    })
-
-    return new Promise((resolve, reject) => {
-      // TODO: Put objects in S3
-    })
-  })
-
-  return Promise.all(filePromises)
+    console.log('Uploaded all files')
+  } catch (err) {
+    console.error('Error uploading files to S3:', err)
+  }
 }
+
+async function uploadS3Object (bucketName, file) {
+  // TODO: Put object in S3
+}
+
+execute()

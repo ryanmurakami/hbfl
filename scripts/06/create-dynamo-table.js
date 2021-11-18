@@ -1,19 +1,21 @@
 // Imports
-const AWS = require('aws-sdk')
+const {
+  CreateTableCommand
+} = require('@aws-sdk/client-dynamodb')
+const { sendDynamoDBCommand } = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
-
-// Declare local variables
-// TODO: Declare dynamoDB object
-
-createTable('hamsters')
-.then(() => createTable('races'))
-.then(data => console.log(data))
-
-function createTable (tableName) {
-  // TODO: Declare params for createTable
-
-  return new Promise((resolve, reject) => {
-    // TODO: Call createTable function
-  })
+async function execute () {
+  try {
+    await createTable('hamsters')
+    const data = await createTable('races')
+    console.log(data)
+  } catch (err) {
+    console.error('Could not create tables:', err)
+  }
 }
+
+async function createTable (tableName) {
+  // TODO: Create dynamodb table
+}
+
+execute()

@@ -1,54 +1,68 @@
-const AWS = require('aws-sdk')
+const {
+  IAMClient,
+  AttachRolePolicyCommand,
+  CreateRoleCommand
+} = require('@aws-sdk/client-iam')
+const { SQSClient } = require('@aws-sdk/client-sqs')
+const { KinesisClient } = require('@aws-sdk/client-kinesis')
+const { LambdaClient } = require('@aws-sdk/client-lambda')
 const archiver = require('archiver')
 const path = require('path')
 const streamBuffers = require('stream-buffers')
 const fs = require('fs')
 
-function createLambdaKinesisRole () {
+async function sendSQSCommand (command) {
+  const client = new SQSClient({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function sendKinesisCommand (command) {
+  const client = new KinesisClient({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function sendLambdaCommand (command) {
+  const client = new LambdaClient({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function createLambdaKinesisRole () {
   const roleName = 'lambda-kinesis-consumer-role'
-  const iam = new AWS.IAM()
   const params = {
     RoleName: roleName,
     Path: '/service-role/',
     AssumeRolePolicyDocument: '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Service": "lambda.amazonaws.com" }, "Action": "sts:AssumeRole" } ] }'
   }
 
-  return new Promise((resolve, reject) => {
-    iam.createRole(params, (err, data) => {
-      if (err) reject(err)
-      else {
-        const kinesisParams = {
-          PolicyArn: 'arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess',
-          RoleName: roleName
-        }
+  const client = new IAMClient({ region: process.env.AWS_REGION })
+  const roleCommand = new CreateRoleCommand(params)
+  const roleResponse = await client.send(roleCommand)
 
-        const lambdaParams = {
-          PolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
-          RoleName: roleName
-        }
+  const kinesisParams = {
+    PolicyArn: 'arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess',
+    RoleName: roleName
+  }
+  const lambdaParams = {
+    PolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+    RoleName: roleName
+  }
+  const dynamoParams = {
+    PolicyArn: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess',
+    RoleName: roleName
+  }
 
-        const dynamoParams = {
-          PolicyArn: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess',
-          RoleName: roleName
-        }
+  const kinesisPolicyCommand = new AttachRolePolicyCommand(kinesisParams)
+  await client.send(kinesisPolicyCommand)
 
-        iam.attachRolePolicy(kinesisParams, (err) => {
-          if (err) reject(err)
-          else {
-            iam.attachRolePolicy(lambdaParams, (err) => {
-              if (err) reject(err)
-              else {
-                iam.attachRolePolicy(dynamoParams, (err) => {
-                  if (err) reject(err)
-                  else setTimeout(() => resolve(data.Role.Arn), 10000)
-                })
-              }
-            })
-          }
-        })
-      }
-    })
-  })
+  const lambdaPolicyCommand = new AttachRolePolicyCommand(lambdaParams)
+  await client.send(lambdaPolicyCommand)
+
+  const dynamoPolicyCommand = new AttachRolePolicyCommand(dynamoParams)
+  await client.send(dynamoPolicyCommand)
+
+  await sleep(10)
+
+  return roleResponse.Role.Arn
 }
 
 function zipLambdaFile () {
@@ -74,7 +88,15 @@ function zipLambdaFile () {
   })
 }
 
+// Borrowed from https://www.sitepoint.com/delay-sleep-pause-wait/
+function sleep (s) {
+  return new Promise(resolve => setTimeout(resolve, s * 1000))
+}
+
 module.exports = {
   createLambdaKinesisRole,
+  sendKinesisCommand,
+  sendLambdaCommand,
+  sendSQSCommand,
   zipLambdaFile
 }

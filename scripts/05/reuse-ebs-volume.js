@@ -1,28 +1,32 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  AttachVolumeCommand,
+  DetachVolumeCommand
+} = require('@aws-sdk/client-ec2')
+const { sendCommand, sleep } = require('./helpers')
 
 // Declare local variables
-const ec2 = new AWS.EC2()
 const volumeId = '/* TODO: Add the volume to detach/attach */'
 const instanceId = '/* TODO: Add the instance to attach to */'
 
-detachVolume(volumeId)
-.then(() => attachVolume(instanceId, volumeId))
-
-function detachVolume (volumeId) {
-  // TODO: Configure detachVolume params
-
-  return new Promise((resolve, reject) => {
-    // TODO: Detach the volume
-  })
+async function execute () {
+  try {
+    await detachVolume(volumeId)
+    console.log('Detached volume:', volumeId)
+    await sleep(3)
+    await attachVolume(instanceId, volumeId)
+    console.log(`Attached volume: ${volumeId} to instance: ${instanceId}`)
+  } catch (err) {
+    console.error('Could not attach volume:', err)
+  }
 }
 
-function attachVolume (instanceId, volumeId) {
-  // TODO: Configure attachVolume params
-
-  return new Promise((resolve, reject) => {
-    // TODO: Attach the volume
-  })
+async function detachVolume (volumeId) {
+  // TODO: Detach the volume
 }
+
+async function attachVolume (instanceId, volumeId) {
+  // TODO: Attach the volume
+}
+
+execute()
