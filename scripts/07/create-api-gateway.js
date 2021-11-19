@@ -1,63 +1,55 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  CreateResourceCommand,
+  CreateRestApiCommand,
+  GetResourcesCommand,
+  PutIntegrationCommand,
+  PutMethodCommand
+} = require('@aws-sdk/client-api-gateway')
+const { sendAPIGatewayCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
-// TODO: Create api gateway object
 const apiName = 'hamster-api'
 
-let apiData
+async function execute () {
+  try {
+    const response = await createRestApi(apiName)
+    const apiData = response
 
-createRestApi(apiName)
-.then((data) => {
-  apiData = data
-  return getRootResource(apiData)
-})
-.then(rootResourceId => createResource(rootResourceId, 'hbfl', apiData))
-.then(hbflResourceId => createResourceMethod(hbflResourceId, 'GET', apiData))
-.then(hbflResourceId => createMethodIntegration(hbflResourceId, 'GET', apiData))
-.then(hbflResourceId => createResource(hbflResourceId, '{proxy+}', apiData))
-.then(proxyResourceId => createResourceMethod(proxyResourceId, 'ANY', apiData, 'proxy'))
-.then(proxyResourceId => createMethodIntegration(proxyResourceId, 'ANY', apiData, 'proxy'))
-.then(data => console.log(data))
+    const rootResourceId = await getRootResource(apiData)
 
-function createRestApi (apiName) {
-  // TODO: Create params const
+    const hbflResourceId = await createResource(rootResourceId, 'hbfl', apiData)
+    await createResourceMethod(hbflResourceId, 'GET', apiData)
+    await createMethodIntegration(hbflResourceId, 'GET', apiData)
 
-  return new Promise((resolve, reject) => {
-    // TODO: Create a new rest API
-  })
+    const proxyResourceId = await createResource(hbflResourceId, '{proxy+}', apiData)
+    await createResourceMethod(proxyResourceId, 'ANY', apiData, 'proxy')
+    await createMethodIntegration(proxyResourceId, 'ANY', apiData, 'proxy')
+
+    console.log('API creation complete')
+  } catch (err) {
+    console.error('Error creating API Gateway API:', err)
+  }
 }
 
-function getRootResource (api) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Get the resources and find the resource with path '/'
-  })
+async function createRestApi (apiName) {
+  // TODO: Create a new rest API
 }
 
-function createResource (parentResourceId, resourcePath, api) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Create the resource and return the resource id
-  })
+async function getRootResource (api) {
+  // TODO: Get the resources and find the resource with path '/'
 }
 
-function createResourceMethod (resourceId, method, api, path) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Put the method and return the resourceId argument
-  })
+async function createResource (parentResourceId, resourcePath, api) {
+  // TODO: Create the resource and return the resource id
 }
 
-function createMethodIntegration (resourceId, method, api, path) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Put the integration and return the resourceId argument
-  })
+async function createResourceMethod (resourceId, method, api, path) {
+  // TODO: Put the method and return the resourceId argument
 }
+
+async function createMethodIntegration (resourceId, method, api, path) {
+  // TODO: Put the integration and return the resourceId argument
+}
+
+execute()

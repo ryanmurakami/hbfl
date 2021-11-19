@@ -1,33 +1,36 @@
 // Imports
-const AWS = require('aws-sdk')
+const {
+  CreateListenerCommand,
+  CreateTargetGroupCommand
+} = require('@aws-sdk/client-elastic-load-balancing-v2')
+
 const helpers = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
-
 // Declare local variables
-// TODO: Create a new ELBv2 object
-const sgName = 'hamsterELBSG'
+const sgName = 'hamsterLBSG'
 const tgName = 'hamsterTG'
-const elbName = 'hamsterELB'
+const lbName = 'hamsterLB'
 const vpcId = '/* TODO: Add your VPC Id */'
 const subnets = [
   /* TODO: Add two subnets */
 ]
 
-helpers.createSecurityGroup(sgName, 80)
-.then((sgId) =>
-  Promise.all([
-    createTargetGroup(tgName),
-    createLoadBalancer(elbName, sgId)
-  ])
-)
-.then((results) => {
-  const tgArn = results[0].TargetGroups[0].TargetGroupArn
-  const lbArn = results[1].LoadBalancers[0].LoadBalancerArn
-  console.log('Target Group Name ARN:', tgArn)
-  return createListener(tgArn, lbArn)
-})
-.then((data) => console.log(data))
+async function execute () {
+  try {
+    const sgId = await helpers.createSecurityGroup(sgName, 80)
+    const tgResult = await createTargetGroup(tgName)
+    const lbResult = await createLoadBalancer(lbName, sgId)
+
+    const tgArn = tgResult.TargetGroups[0].TargetGroupArn
+    const lbArn = lbResult.LoadBalancers[0].LoadBalancerArn
+    console.log('Target Group Name ARN:', tgArn)
+
+    const response = await createListener(tgArn, lbArn)
+    console.log('Created load balancer with:', response)
+  } catch (err) {
+    console.error('Failed to create load balancer with:', err)
+  }
+}
 
 function createLoadBalancer (lbName, sgId) {
   // TODO: Create a load balancer
@@ -41,12 +44,8 @@ function createTargetGroup (tgName) {
     VpcId: vpcId
   }
 
-  return new Promise((resolve, reject) => {
-    elbv2.createTargetGroup(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  const command = new CreateTargetGroupCommand(params)
+  return helpers.sendELBCommand(command)
 }
 
 function createListener (tgArn, lbArn) {
@@ -62,10 +61,8 @@ function createListener (tgArn, lbArn) {
     Protocol: 'HTTP'
   }
 
-  return new Promise((resolve, reject) => {
-    elbv2.createListener(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  const command = new CreateListenerCommand(params)
+  return helpers.sendELBCommand(command)
 }
+
+execute()

@@ -1,18 +1,23 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  CreateBucketCommand
+} = require('@aws-sdk/client-s3')
+const { sendS3Command } = require('./helpers')
 
 // Declare local variables
-// TODO: Create new s3 object
+const bucketName = 'hamster-bucket/* TODO: Add a unique identifier */'
 
-createBucket('hamster-bucket/* TODO: Add a unique identifier */')
-.then((data) => console.log(data))
-
-function createBucket (bucketName) {
-  // TODO: Define params object
-
-  return new Promise((resolve, reject) => {
-    // TODO: Create s3 bucket
-  })
+async function execute () {
+  try {
+    const response = await createBucket(bucketName)
+    console.log('Created S3 Bucket with:', response)
+  } catch (err) {
+    console.error('Error creating S3 Bucket:', err)
+  }
 }
+
+async function createBucket (bucketName) {
+  // TODO: Create s3 bucket
+}
+
+execute()

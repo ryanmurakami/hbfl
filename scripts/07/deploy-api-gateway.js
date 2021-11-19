@@ -1,19 +1,24 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  CreateDeploymentCommand
+} = require('@aws-sdk/client-api-gateway')
+const { sendAPIGatewayCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
-const apiG = new AWS.APIGateway()
+const stage = 'prod'
 const apiId = '/* TODO: Add api id */'
 
-createDeployment(apiId, 'prod')
-.then(data => console.log(data))
+async function execute () {
+  try {
+    const response = await createDeployment(apiId, stage)
+    console.log(response)
+  } catch (err) {
+    console.error('Error deploying api:', err)
+  }
+}
 
 function createDeployment (apiId, stageName) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Create deployment
-  })
+  // TODO: Create deployment
 }
+
+execute()

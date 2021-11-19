@@ -1,19 +1,23 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  CreateHostedZoneCommand
+} = require('@aws-sdk/client-route-53')
+const { sendRoute53Command: sendCommand } = require('./helpers')
 
 // Declare local variables
-// TODO: Create route53 object
 const hzName = 'hbfl.online'
 
-createHostedZone(hzName)
-.then(data => console.log(data))
+async function execute () {
+  try {
+    const response = await createHostedZone(hzName)
+    console.log(response)
+  } catch (err) {
+    console.error('Error creating hosted zone:', err)
+  }
+}
 
 function createHostedZone (hzName) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Create hostedzone with route53
-  })
+  // TODO: Create hostedzone with route53
 }
+
+execute()

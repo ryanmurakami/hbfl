@@ -3,6 +3,7 @@ require('dotenv').config()
 
 const plugins = require('./plugins')
 const routes = require('./routes')
+const { logger } = require('./util/logger')
 const { init: usersInit } = require('./lib/data/users')
 const { init: queueInit } = require('./lib/data/lib/sqs.listener')
 
@@ -62,6 +63,24 @@ const init = async () => {
   // register routes
   server.route(routes)
 
+  // logging
+  server.events.on('log', (_, event) => {
+    if (event.error) {
+      logger.error(`Server error: ${event.error.message || 'unknown'}`);
+    } else {
+      logger.info(`Server event: ${event}`)
+    }
+  })
+
+  server.events.on('request', (_, event) => {
+    if (event.tags.includes('unauthenticated')) return
+    if (event.tags.includes('error')) {
+      logger.error(`Request error: ${event.data || event.error.message || 'unknown'}`);
+    } else {
+      logger.info(`Request event: ${event}`)
+    }
+  })
+
   // initialize database and start server
   usersInit()
   // Commented out until SQS is configured
@@ -72,6 +91,7 @@ const init = async () => {
       console.log(`Server started at http://localhost:${server.info.port}`)
     } catch (err) {
       console.error(`Server could not start. Error: ${err}`)
+      logger.error(`Server could not start. Error: ${err}`)
     }
   })
 }

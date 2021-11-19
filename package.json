@@ -12,13 +12,26 @@
     "stop-pm2": "pm2 stop hbfl",
     "deploy": "node deploy.js"
   },
-  "author": "Ryan Lewis <ryan@ryanhlewis.com>",
+  "author": "Ryan Lewis <ryan@ryanlewis.dev>",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-api-gateway": "3.41.0",
+    "@aws-sdk/client-auto-scaling": "3.38.0",
+    "@aws-sdk/client-cloudfront": "3.41.0",
+    "@aws-sdk/client-cloudwatch": "3.41.0",
+    "@aws-sdk/client-dynamodb": "3.40.0",
     "@aws-sdk/client-ec2": "3.33.0",
+    "@aws-sdk/client-elastic-load-balancing-v2": "3.38.0",
+    "@aws-sdk/client-elasticache": "3.40.0",
+    "@aws-sdk/client-iam": "3.38.0",
     "@aws-sdk/client-kinesis": "3.32.0",
+    "@aws-sdk/client-lambda": "3.41.0",
+    "@aws-sdk/client-rds": "3.40.0",
+    "@aws-sdk/client-route-53": "3.41.0",
+    "@aws-sdk/client-s3": "3.39.0",
     "@aws-sdk/client-sns": "3.32.0",
     "@aws-sdk/client-sqs": "3.32.0",
+    "@aws-sdk/lib-dynamodb": "3.40.0",
     "@hapi/boom": "9.1.4",
     "@hapi/catbox": "11.1.1",
     "@hapi/catbox-redis": "6.0.2",
@@ -53,7 +66,8 @@
     "ssh-exec": "2.0.0",
     "stream-buffers": "3.0.2",
     "superagent": "6.1.0",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "winston": "3.3.3"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",

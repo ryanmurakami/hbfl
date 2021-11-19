@@ -1,5 +1,17 @@
+const { EC2Client } = require('@aws-sdk/client-ec2')
+const { S3Client } = require('@aws-sdk/client-s3')
 const glob = require('glob')
 const fs = require('fs')
+
+async function sendCommand (command) {
+  const client = new EC2Client({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function sendS3Command (command) {
+  const client = new S3Client({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
 
 function getPublicFiles () {
   return new Promise((resolve, reject) => {
@@ -49,7 +61,15 @@ function getContentType (filename) {
   }
 }
 
+// Borrowed from https://www.sitepoint.com/delay-sleep-pause-wait/
+function sleep (s) {
+  return new Promise(resolve => setTimeout(resolve, s * 1000))
+}
+
 module.exports = {
   getPublicFiles,
-  getContentType
+  getContentType,
+  sendCommand,
+  sendS3Command,
+  sleep
 }

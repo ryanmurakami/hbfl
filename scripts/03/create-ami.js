@@ -1,14 +1,14 @@
 // Imports
-// TODO: Import the aws-sdk
+// TODO: Import the ec2 client
 
-// TODO: Configure region
-
-// Declare local variables
-// TODO: Create an ec2 object
+function sendCommand (command) {
+  const client = new EC2Client({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
 
 createImage('<instanceid>', 'hamsterImage')
-.then(() => console.log('Complete'))
+  .then(() => console.log('Complete'))
 
-function createImage (seedInstanceId, imageName) {
+async function createImage (seedInstanceId, imageName) {
   // TODO: Implement AMI creation
 }

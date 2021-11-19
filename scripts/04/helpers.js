@@ -1,84 +1,105 @@
-const AWS = require('aws-sdk')
+const {
+  EC2Client,
+  AuthorizeSecurityGroupIngressCommand,
+  CreateSecurityGroupCommand
+} = require('@aws-sdk/client-ec2')
+const {
+  IAMClient,
+  AddRoleToInstanceProfileCommand,
+  AttachRolePolicyCommand,
+  CreateInstanceProfileCommand,
+  CreateRoleCommand
+} = require('@aws-sdk/client-iam')
+const {
+  ElasticLoadBalancingV2Client
+} = require('@aws-sdk/client-elastic-load-balancing-v2')
+const {
+  AutoScalingClient
+} = require('@aws-sdk/client-auto-scaling')
 
-function createSecurityGroup (sgName, port) {
-  return new Promise((resolve, reject) => {
-    const ec2 = new AWS.EC2()
-    const params = {
-      Description: sgName,
-      GroupName: sgName
-    }
-
-    ec2.createSecurityGroup(params, (err, data) => {
-      if (err) reject(err)
-      else {
-        const params = {
-          GroupId: data.GroupId,
-          IpPermissions: [
-            {
-              IpProtocol: 'tcp',
-              FromPort: port,
-              ToPort: port,
-              IpRanges: [
-                {
-                  CidrIp: '0.0.0.0/0'
-                }
-              ]
-            }
-          ]
-        }
-        ec2.authorizeSecurityGroupIngress(params, (err) => {
-          if (err) reject(err)
-          else resolve(data.GroupId)
-        })
-      }
-    })
-  })
+async function sendCommand (command) {
+  const client = new EC2Client({ region: process.env.AWS_REGION })
+  return client.send(command)
 }
 
-function createIamRole (roleName) {
+async function sendIAMCommand (command) {
+  const client = new IAMClient({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function sendELBCommand (command) {
+  const client = new ElasticLoadBalancingV2Client({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function sendAutoScalingCommand (command) {
+  const client = new AutoScalingClient({ region: process.env.AWS_REGION })
+  return client.send(command)
+}
+
+async function createSecurityGroup (sgName, port) {
+  const sgParams = {
+    Description: sgName,
+    GroupName: sgName
+  }
+  const sgCommand = new CreateSecurityGroupCommand(sgParams)
+  const data = await sendCommand(sgCommand)
+
+  const rulesParams = {
+    GroupId: data.GroupId,
+    IpPermissions: [
+      {
+        IpProtocol: 'tcp',
+        FromPort: port,
+        ToPort: port,
+        IpRanges: [
+          {
+            CidrIp: '0.0.0.0/0'
+          }
+        ]
+      }
+    ]
+  }
+
+  const authCommand = new AuthorizeSecurityGroupIngressCommand(rulesParams)
+  await sendCommand(authCommand)
+  return data.GroupId
+}
+
+async function createIamRole (roleName) {
   const profileName = `${roleName}_profile`
-  const iam = new AWS.IAM()
-  const params = {
+  const roleParams = {
     RoleName: roleName,
     AssumeRolePolicyDocument: '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Service": "ec2.amazonaws.com" }, "Action": "sts:AssumeRole" } ] }'
   }
+  const policyParams = {
+    PolicyArn: 'arn:aws:iam::aws:policy/AdministratorAccess',
+    RoleName: roleName
+  }
+  const ipParams = {
+    InstanceProfileName: profileName,
+    RoleName: roleName
+  }
 
-  return new Promise((resolve, reject) => {
-    iam.createRole(params, (err) => {
-      if (err) reject(err)
-      else {
-        const params = {
-          PolicyArn: 'arn:aws:iam::aws:policy/AdministratorAccess',
-          RoleName: roleName
-        }
+  const createRoleCommand = new CreateRoleCommand(roleParams)
+  await sendIAMCommand(createRoleCommand)
 
-        iam.attachRolePolicy(params, (err) => {
-          if (err) reject(err)
-          else {
-            iam.createInstanceProfile({ InstanceProfileName: profileName }, (err, iData) => {
-              if (err) reject(err)
-              else {
-                const params = {
-                  InstanceProfileName: profileName,
-                  RoleName: roleName
-                }
-                iam.addRoleToInstanceProfile(params, (err) => {
-                  if (err) reject(err)
-                  else {
-                    // Profile creation is slow, need to wait
-                    setTimeout(() => resolve(iData.InstanceProfile.Arn), 10000)
-                  }
-                })
-              }
-            })
-          }
-        })
-      }
-    })
-  })
+  const attachPolicyCommand = new AttachRolePolicyCommand(policyParams)
+  await sendIAMCommand(attachPolicyCommand)
+
+  const ipCommand = new CreateInstanceProfileCommand({ InstanceProfileName: profileName })
+  const data = await sendIAMCommand(ipCommand)
+
+  const addCommand = new AddRoleToInstanceProfileCommand(ipParams)
+  await sendIAMCommand(addCommand)
+
+  return data.InstanceProfile.Arn
 }
 
 module.exports = {
   createIamRole,
-  createSecurityGroup
+  createSecurityGroup,
+  sendCommand,
+  sendAutoScalingCommand,
+  sendELBCommand
 }

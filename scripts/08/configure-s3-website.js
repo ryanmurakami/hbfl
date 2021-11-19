@@ -1,18 +1,20 @@
 // Imports
-const AWS = require('aws-sdk')
+const { PutBucketWebsiteCommand } = require('@aws-sdk/client-s3')
+const { sendS3Command: sendCommand } = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const bucketName = '/* TODO: Add your S3 bucket name */'
 
-// Declare local variables
-const s3 = new AWS.S3()
-
-configureS3Site('/* TODO: Add your S3 bucket name */')
-.then(data => console.log(data))
-
-function configureS3Site (bucketName) {
-  // TODO: Create params const object
-
-  return new Promise((resolve, reject) => {
-    // Call putBucketWebsite
-  })
+async function execute () {
+  try {
+    const response = await configureS3Site(bucketName)
+    console.log(response)
+  } catch (err) {
+    console.error('Error configuring S3 static site:', err)
+  }
 }
+
+async function configureS3Site (bucketName) {
+  // Use PutBucketWebsiteCommand to create static site
+}
+
+execute()

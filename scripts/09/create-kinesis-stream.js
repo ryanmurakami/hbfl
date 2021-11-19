@@ -1,19 +1,23 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  CreateStreamCommand
+} = require('@aws-sdk/client-kinesis')
+const { sendKinesisCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
-// TODO: Create kinesis object
 const streamName = 'hamster-race-results'
 
-createKinesisStream(streamName)
-.then(data => console.log(data))
-
-function createKinesisStream (streamName) {
-  // TODO: Create params const
-
-  return new Promise((resolve, reject) => {
-    // TODO: Create kinesis stream
-  })
+async function execute () {
+  try {
+    const response = await createKinesisStream(streamName)
+    console.log(response)
+  } catch (err) {
+    console.error('Error creating Kinesis stream:', err)
+  }
 }
+
+async function createKinesisStream (streamName) {
+  // TODO: Create kinesis stream
+}
+
+execute()

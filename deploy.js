@@ -69,8 +69,10 @@ archive.directory('plugins/', 'plugins')
 archive.directory('public/', 'public')
 archive.directory('routes/', 'routes')
 archive.directory('util/', 'util')
+archive.append(fs.createReadStream(path.join(__dirname, '.env')), { name: '.env' })
 archive.append(fs.createReadStream(path.join(__dirname, 'index.js')), { name: 'index.js' })
 archive.append(fs.createReadStream(path.join(__dirname, 'package.json')), { name: 'package.json' })
+archive.append(fs.createReadStream(path.join(__dirname, 'package-lock.json')), { name: 'package-lock.json' })
 archive.append(fs.createReadStream(path.join(__dirname, 'webpack.config.js')), { name: 'webpack.config.js' })
 
 archive.finalize()
@@ -116,8 +118,9 @@ function unpack (ip) {
     const command = 'cd /home/bitnami && ' +
       'unzip -o -q ./archive.zip -d hbfl && ' +
       'cd hbfl && ' +
-      'npm install && ' +
-      'sudo npm start'
+      'npm ci && ' + // installs dependencies
+      'kill -9 $(pgrep -f node | grep -v ^$$\\$) && ' + // this kills any existing node processes except self
+      'npm start' // starts app
 
     exec(command, {
       user: 'bitnami',

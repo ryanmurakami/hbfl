@@ -1,19 +1,24 @@
 // Imports
-const AWS = require('aws-sdk')
-const helpers = require('./helpers')
+const {
+  CreateCacheClusterCommand
+} = require('@aws-sdk/client-elasticache')
+const {
+  createSecurityGroup,
+  sendElastiCacheCommand
+} = require('./helpers')
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
-
-// TODO: Create an elasticache object
-
-helpers.createSecurityGroup('hamster_redis_sg', 6379)
-.then(sgId => createRedisCluster('hamster', sgId))
-.then(data => console.log(data))
-
-function createRedisCluster (clusterName, sgId) {
-  // TODO: Create params object
-
-  return new Promise((resolve, reject) => {
-    // TODO: Create cache cluster
-  })
+async function execute () {
+  try {
+    const sgId = await createSecurityGroup('hamster_redis_sg', 6379)
+    const response = await createRedisCluster('hamster', sgId)
+    console.log(response)
+  } catch (err) {
+    console.error('Could not create cache cluster:', err)
+  }
 }
+
+async function createRedisCluster (clusterName, sgId) {
+  // TODO: Create redis cache cluster
+}
+
+execute()

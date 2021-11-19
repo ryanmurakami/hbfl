@@ -1,22 +1,26 @@
 // Imports
-const AWS = require('aws-sdk')
-
-AWS.config.update({ region: '/* TODO: Add your region */' })
+const {
+  CreateQueueCommand
+} = require('@aws-sdk/client-sqs')
+const { sendSQSCommand: sendCommand } = require('./helpers')
 
 // Declare local variables
-// TODO: Create sqs object
 const queueName = 'hamster-race-results'
 
-createQueue(queueName)
-.then(data => console.log(data))
+async function execute () {
+  try {
+    const response = await createQueue(queueName)
+    console.log(response)
+  } catch (err) {
+    console.error('Error creating SQS queue:', err)
+  }
+}
 
 function createQueue (queueName) {
   // TODO: Create params const for creating queue
 
-  return new Promise((resolve, reject) => {
-    sqs.createQueue(params, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+  const command = new CreateQueueCommand(params)
+  return sendCommand(command)
 }
+
+execute()
